@@ -21,7 +21,6 @@
                         <div class="video-container">
                             <video ref="video1" autoplay></video>
                         </div>
-
                     </div>
                     <div class="two">
                         <div class="video-container">
@@ -67,62 +66,147 @@
 
             <div class="setting-box">
 
-                <div class="device-icon-btn">
-                    <select class="arrow" ref="audioSourceSelect" @change="changeAudioDevice"></select>
-                    <select class="arrow" ref="videoSourceSelect" @change="changeVideoDevice"></select>
+                <div class="device">
+                    <div id="mic">
+                        <div class="mic-icon-box">
+                            <button class="device-icon">
+                                <img src="../../assets/icons/麦克风.svg" alt="Icon">
+                                <span>静音</span>
+                            </button>
+                        </div>
 
-                    <button @click="show">与会者</button>
-                </div>
+                        <div class="arrow-background" @click="showAudioDevice">
+                            <div class="arrow"></div>
+                        </div>
 
-                <div class="grid-icon-btn" @click="toChangeGrid">
-                    <div class="grid-icon">
-                        <span>■</span>
-                        <span>■</span>
-                        <span>■</span>
-                        <span>■</span>
-                    </div>
-                    <div class="grid-icon-text">
-                        <div>宫格视图</div>
-                        <div class="arrow"></div>
-                    </div>
-                    <div class="grid-card" ref="gridCard">
-                        <div class="grid-card-layout">
-                            <div class="grid-card-1" @click="changeLayout(1)">
-                                <img src="../../assets/icons/一宫.svg" alt="">
-                            </div>
-                            <div @click="changeLayout(2)">
-                                <img src="../../assets/icons/两宫.svg" alt="">
-                            </div>
-                            <div @click="changeLayout(4)">
-                                <img src="../../assets/icons/四宫.svg" alt="">
+                        <div class="device-select-card" ref="audioDeviceCard">
+                            <div class="device-select">
+                                <span>选择麦克风</span>
+                                <select ref="audioSourceSelect" @change="changeAudioDevice"></select>
                             </div>
                         </div>
 
                     </div>
+
+                    <div id="camera">
+                        <div class="camera-icon-box">
+                            <button class="device-icon">
+                                <img src="../../assets/icons/摄像头.svg" alt="Icon">
+                                <span>摄像机</span>
+                            </button>
+                        </div>
+
+                        <div class="arrow-background" @click="showVideoDevice">
+                            <div class="arrow"></div>
+                        </div>
+
+                        <div class="device-select-card" ref="videoDeviceCard">
+                            <div class="device-select">
+                                <span>选择摄像头</span>
+                                <select ref="videoSourceSelect" @change="changeVideoDevice"></select>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                 </div>
 
+                <div class="setting-middle">
+
+                    <div class="participant middle-Icon-box">
+                        <div class="middle-Icon" @click="showParticipantFn">
+                            <img src="../../assets/icons/与会者.svg" alt="" class="middle-icon-img">
+                            <span class="middle-icon-text">成员管理</span>
+                        </div>
+                    </div>
 
 
+                    <div class="bandwidth middle-Icon-box">
+                        <div class="middle-Icon" @click="showBandWidthFn">
+                            <img src="../../assets/icons/码率.svg" alt="" class="middle-icon-img">
+                            <span class="middle-icon-text">码率</span>
+                        </div>
 
-                <!-- <div>
-                <button class="popup" @mouseenter="showPopup = true"></button>
-            </div> -->
+                        <div v-if="showBandWidth" class="bandwidth-card middle-icon-card">
+                            <div class="bandwidth-select">
+                                <span>选择分辨率和码率</span>
+                                <select id="bandwidthSelect" ref="bandwidthSelect"
+                                    @change="selectCodeAndVideoResolution">
+                                    <option value="    ">自适应</option>
+                                    <option value="1920 1080 60 4096">1080P60FPS 4096kbps</option>
+                                    <option value="1920 1080 30 2048">1080P30FPS 2048kbps</option>
+                                    <option value="1280 720 60 1536">720P60FPS 1536kbps</option>
+                                    <option value="1280 720 30 1024">720P30FPS 1024kbps</option>
+                                    <option value="640 360 30 512">4CIF 512kbps</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                <div v-if="showPopup" class="popup" @mouseleave="showPopup = false">
-                    <div>
-                        <ul>
-                            <li v-if="userList"><img :src="userList[0].avatar" alt=""></li>
-                            <li>2</li>
-                        </ul>
+                    <div class="record  middle-Icon-box">
+                        <div class="middle-Icon">
+                            <img src="../../assets/icons/开播gray.svg" alt="" class="middle-icon-img">
+                            <span class="middle-icon-text">录制</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-right">
+                    <div class="grid-icon-btn" @click="toChangeGrid">
+                        <div class="grid-icon">
+                            <span>■</span>
+                            <span>■</span>
+                            <span>■</span>
+                            <span>■</span>
+                        </div>
+                        <div class="grid-icon-text">
+                            <div>宫格视图</div>
+                            <div class="arrow"></div>
+                        </div>
+                        <div class="grid-card" ref="gridCard">
+                            <div class="grid-card-layout">
+                                <div class="grid-card-1" @click="changeLayout(1)">
+                                    <img src="../../assets/icons/一宫.svg" alt="">
+                                </div>
+                                <div @click="changeLayout(2)">
+                                    <img src="../../assets/icons/两宫.svg" alt="">
+                                </div>
+                                <div @click="changeLayout(4)">
+                                    <img src="../../assets/icons/四宫.svg" alt="">
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
 
+        <div v-if="showParticipant" class="participantCard" >
+            <ul>
+                <li v-for="(user, index) in userList" :key="index">
+                    <div class="nickname">
+                        <span> {{ user.nickname }}</span>
 
-        <div class="showBox" ref="showBox">
-            <span>123</span>
+                    </div>
+                    <div class="avatarIcon">
+                        <div>
+                            <img :src="user.avatar" alt="">
+                        </div>
+                        <div class="micIcon" @click="swtichRemoteMic(user.nickname)">
+                            <img src="../../assets/icons/麦克风静音.svg" alt="">
+                        </div>
+                        <div class="videoIcon" @click="swtichRemoteCamera(user.nickname)">
+                            <img src="../../assets/icons/开播gray.svg" alt="">
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
         </div>
 
         <div class="background">
@@ -158,12 +242,11 @@ export default {
             roomId: 1234,   //指定的房间Id
 
             site: {},
-            showPopup: false,
+            showBandWidth: false,
+            showParticipant: false,
 
             currentLayout: 1,  //默认布局为1
             currentStreams: {},
-
-            flag: false,
         }
     },
 
@@ -171,10 +254,6 @@ export default {
         this.socket.on('connect', () => {
             console.log('Socket connected:', this.user.nickname);
             // 页面加载直接发一条加入房间的消息
-            // this.socket.emit('joinRoom', {
-            //     nickname: this.nickname,
-            //     roomId: this.roomId
-            // })
         });
 
         // 监听加入连麦的主播
@@ -199,10 +278,6 @@ export default {
             this.userList = data.userList
             this.updateLayout();
             this.play(data.nickname)
-            // for (let i = 0; i < this.userList.length; i++) {
-            //     this.play(this.userList[i])
-            //     console.log('play other:');
-            // }
         })
 
         // 离开房间
@@ -216,9 +291,10 @@ export default {
             console.log(' this.pcs:', this.pcs);
         })
 
-        // 监听answerSDP 推流的sdp
+        // 监听answerSDP 推流的sdp,  注意不是play的SDP
         this.socket.on('answerSDP', async data => {
-            console.log('answerSDP', data);
+            console.log('receive publish answerSDP', data);
+
             await this.pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: data.sdp }));
             const startBroadcast = this.$refs.startBroadcast
             startBroadcast.style.display = 'none'
@@ -235,16 +311,19 @@ export default {
 
             const stream = new MediaStream()
             const video = this.$refs[`video${videoTag}`]
-            console.log('playAnswerSDP:', data);
+            console.log('receive playAnswerSDP:', data);
+
             try {
+                // if (!this.pcs[nickname]) {
+                //   console.log('不存在');
+                // }     
                 this.pcs[nickname].ontrack = e => {
-                    console.log('track event:', e)
+                    console.log('play track event:', e)
                     stream.addTrack(e.track)
                     video.srcObject = stream
                 }
                 await this.pcs[nickname].setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: sdp }));
-                console.log(`Remote description set for ${nickname}`);
-
+                console.log(`set remoteDesc for play ${nickname}`);
             } catch (err) {
                 console.error('Error setting remote description or handling track event:', err);
             }
@@ -271,9 +350,10 @@ export default {
                 audio: {
                     deviceId: audioSource ? { exact: audioSource } : undefined
                 },
+                // video: true
                 video: {
                     width: { min: 320, ideal: 384 },
-                    height: { min: 180, ideal: 240 },
+                    height: { min: 180, ideal: 216 },
                     deviceId: videoSource ? { exact: videoSource } : undefined,
                     aspectRatio: 16 / 9
                 },
@@ -311,13 +391,15 @@ export default {
             const tracks = type === 'video' ? this.localStream.getVideoTracks() : this.localStream.getAudioTracks();
             tracks.forEach(track => this.localStream.removeTrack(track));
             this.localStream.addTrack(newTrack);
+            const videoDeviceCard = this.$refs.videoDeviceCard
+            videoDeviceCard.style.display = 'none'
             if (!this.pc) {
                 console.log('No peerconnection found2');
                 return;
             }
+
         },
 
-        // 3. 推流
         async publish() {
             if (this.pc !== null && this.pc !== undefined) {
                 console.log("已开始推流");
@@ -331,17 +413,23 @@ export default {
                 // 注意添加顺序为audio、video,后续RTCPeerConnection创建offer时SDP的m线顺序遵循此顺序创建，SRS自带的信令服务器响应的SDP中m线总是先audio后video。
                 // 若本端SDP和远端SDP中的m线顺序不一直，则设置远端描述时会异常，显示offer中的m线与answer中的m线顺序不匹配
                 this.pc = new RTCPeerConnection();
-                this.pc.addTransceiver("audio", { direction: "recvonly" });
-                this.pc.addTransceiver("video", { direction: "recvonly" });
+
+                // 修改为根据推流信息创建指定传输器
+                this.pc.addTransceiver("audio", { direction: "sendrecv" });
+                this.pc.addTransceiver("video", { direction: "sendrecv" });
 
                 // 3.将本地流的 track 添加到 PeerConnection
                 this.localStream.getTracks().forEach(track => {
+                    // if (track.kind === 'video') {
+                    //     this.pc.addTransceiver("video", { direction: "recvonly" })
+                    // }
                     this.pc.addTrack(track, this.localStream);
                 });
 
                 // 4.创建本地 offer，添加本地描述
                 const offer = await this.pc.createOffer();
-                offer.sdp = this.setBandwidth(offer.sdp);
+                // offer.sdp = this.setBandwidth(offer.sdp);
+
                 console.log('publish  offer:', offer);
                 await this.pc.setLocalDescription(offer);
 
@@ -358,7 +446,6 @@ export default {
 
                 // 设置远程描述,这里不再设置，监听远程sdp事件由客户端设置远程描述
                 // await this.pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answerSPD.sdp }));
-
             } catch (err) {
                 console.error('Error publishing stream:', err);
             }
@@ -368,7 +455,6 @@ export default {
 
         // 4. 拉流
         async play(us) {
-
             try {
                 const pc = new RTCPeerConnection()
                 this.pcs[us] = pc
@@ -379,15 +465,14 @@ export default {
                 const offer = await this.pcs[us].createOffer()
                 await this.pcs[us].setLocalDescription(offer)
                 // const modifiedSdp = this.setBandwidth(offer.sdp);
-
-                console.log('play offer:', offer);
+                console.log('set localDesc for play:', offer);
 
                 const data = {
                     'nickname': us,
                     'roomId': this.roomId,
                     'sdp': offer.sdp
                 };
-                console.log('playOfferSDP:', data);
+                // console.log('playOfferSDP:', data);
                 this.socket.emit('playOfferSDP', data)
                 // const answer = await playStream(httpURL, data)
                 // await pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: answer.sdp }));
@@ -396,6 +481,22 @@ export default {
                 console.error('Error play stream:', error);
             }
 
+        },
+
+        swtichRemoteMic(remoteId) {
+            this.pcs[remoteId].getReceivers().forEach(receiver => {
+                if (receiver.track.kind === 'audio') {
+                    receiver.track.enabled =  !receiver.track.enabled
+                } 
+            });
+        },
+
+        swtichRemoteCamera(remoteId) {
+            this.pcs[remoteId].getReceivers().forEach(receiver => {
+                if (receiver.track.kind === 'video') {
+                    receiver.track.enabled = !receiver.track.enabled
+                } 
+            });
         },
 
         // 5.1 手动布局
@@ -441,32 +542,70 @@ export default {
             this.changeLayout(layout);
         },
 
-        // 6. 修改sdp
+        // 6. 修改sdp修改带宽 
         setBandwidth(sdp) {
             // 将分辨率设置为较低的值
             const lowResolution = {
                 width: 320,
                 height: 180
             }
-
             const bandwidthLine = 'b=AS:256'; // 设置带宽为500kbps
             const modifiedSdp = sdp.replace(/(m=video.*)\r\n/, `\$1\r\n${bandwidthLine}\r\n`);
 
             return modifiedSdp;
         },
 
+        // 修改码率
+        setCodeRate(newParam) {
+            this.pc.getSenders().forEach(sender => {
+                if (sender.track.kind === 'aduio') {
+                    return;
+                }
+                let param = sender.getParameters()
+                param.encodings[0].maxBitrate = newParam
+                sender.setParameters(param)
+                    .then(() => {
+                        console.log('set maxBitrate sucess!');
+                    })
+                    .catch(err => {
+                        console.error("set MaxBitrate error!" + err.name);
+                    })
+            })
+        },
+        setVideoResolution(width, height, frameRate) {
+            let videoTrack = this.localStream.getVideoTracks()[0]
+            let constraints = {
+                width: { exact: width },
+                height: { exact: height },
+                frameRate: { exact: frameRate }
+            };
+            videoTrack.applyConstraints(constraints)
+                .then(() => {
+                    console.log('update VideoResolution sucess:', width, height);
+                })
+                .catch(err => {
+                    console.warn('update VideoResolution err:', err);
+                    alert('无法应用新的分辨率，请检查摄像机是否支持', err)
+                })
+        },
+
+        selectCodeAndVideoResolution() {
+            const bandwidthSelectValue = this.$refs.bandwidthSelect.value
+            const values = bandwidthSelectValue.split(' ');
+            // 分别获取分辨率和码率
+            let width = values[0];
+            let height = values[1]
+            let frameRate = values[2]
+            let bitrate = values[3] * 1000;
+            console.log('bandwith:', values);
+            this.setCodeRate(bitrate)
+            this.setVideoResolution(width, height, frameRate)
+        },
 
         // setting btn
-        show() {
-            const showBox = this.$refs.showBox
-            if (this.flag) {
-                showBox.style.display = 'none'
-                this.flag = false
-            } else {
-                showBox.style.display = 'block'
-                this.flag = true
-            }
-
+        showParticipantFn() {
+            // const showBox = this.$refs.participantCard
+            this.showParticipant = !this.showParticipant
         },
 
         // peer 中切换媒体
@@ -508,7 +647,6 @@ export default {
                     console.log('No peerconnection found1');
                     return
                 }
-
                 if (this.currentVideoTrack instanceof CanvasCaptureMediaStreamTrack) {
                     console.log('canvas-->camera成功:', this.currentVideoTrack.label);
                 } else {
@@ -555,7 +693,32 @@ export default {
             } else {
                 gridCard.style.display = 'block'
             }
+        },
 
+        showAudioDevice() {
+            const audioDeviceCard = this.$refs.audioDeviceCard
+            const videoDeviceCard = this.$refs.videoDeviceCard
+            if (audioDeviceCard.style.display === 'block') {
+                audioDeviceCard.style.display = 'none'
+            } else {
+                audioDeviceCard.style.display = 'block'
+                videoDeviceCard.style.display = 'none'
+            }
+        },
+
+        showVideoDevice() {
+            const videoDeviceCard = this.$refs.videoDeviceCard
+            const audioDeviceCard = this.$refs.audioDeviceCard
+            if (videoDeviceCard.style.display === 'block') {
+                videoDeviceCard.style.display = 'none'
+            } else {
+                videoDeviceCard.style.display = 'block'
+                audioDeviceCard.style.display = 'none'
+            }
+        },
+
+        showBandWidthFn() {
+            this.showBandWidth = !this.showBandWidth
         }
 
 
@@ -569,11 +732,7 @@ export default {
         }
     }
 
-
-
 }
-
-
 
 </script>
 
@@ -585,13 +744,6 @@ export default {
     display: flex;
     position: relative;
 
-}
-
-.showBox {
-    width: 160px;
-    height: 100%;
-    background-color: bisque;
-    display: none;
 }
 
 .background {
@@ -642,7 +794,7 @@ export default {
     .grid-1,
     .grid-2,
     .grid-4 {
-        width: 100%;
+        /* width: 100%; */
         height: 100%;
     }
 
@@ -652,7 +804,7 @@ export default {
         align-items: center;
 
         .one {
-            width: 70%;
+            width: 55%;
             outline: auto;
             position: relative;
             background-color: rgb(241 243 244);
@@ -681,7 +833,6 @@ export default {
                 left: 50%;
                 transform: translate(-50%, -50%);
                 background-color: #4CAF50;
-                /* padding: 40px 80px; */
                 border-radius: 5px;
             }
 
@@ -712,10 +863,8 @@ export default {
                 height: 100%;
                 border-radius: 8px;
                 background-color: #ddd;
-                /* 占位颜色 */
                 box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
                 z-index: -1;
-
             }
 
 
@@ -731,28 +880,22 @@ export default {
 
         .two {
             position: relative;
-            width: calc(50% - 14px);
-            height: calc(90% - 12px);
-            background-color: rgb(241 243 244);
             border-radius: 8px;
-            outline: gold 2px solid;
-            margin: 0 5px;
+            /* background-color: white; */
+            display: flex;
+            align-items: center;
 
             .video-container {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left: 0;
-                width: 100%;
-                border-radius: 8px;
+                width: 900px;
+                height: 506px;
+                outline: gold 2px solid;
+                border-radius: 6px;
 
                 video {
                     width: calc(100% - 4px);
                     display: block;
-                    border-radius: 8px;
+                    border-radius: 6px;
                     object-fit: cover;
-                    margin: 2px;
-
                 }
             }
 
@@ -762,23 +905,20 @@ export default {
 
     .grid-4 {
         display: flex;
-        justify-content: center;
         flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
 
         .four {
-            width: 38%;
+            display: flex;
             position: relative;
-            margin: 3px 5px;
             outline: gold 2px solid;
-            border-radius: 8px;
+            border-radius: 6px;
+            width: 752px;
+            height: 423px;
 
             .video-container {
-                padding-bottom: 56.25%;
-                /* 16:9 宽高比 */
-                height: 0;
-                position: relative;
-                border-radius: 8px;
-                /* background-color: rgb(241 243 244); */
+                border-radius: 6px;
 
                 .siteName-left {
                     display: flex;
@@ -858,124 +998,351 @@ export default {
 
 }
 
-
-
 .setting-box {
     display: flex;
     height: 40px;
     background-color: white;
+    justify-content: center;
 
-    .grid-icon-btn {
+    .device {
         display: flex;
-        align-items: center;
-        height: 20px;
-        margin: 6px 10px 6px 40px;
-        padding: 4px;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
+        height: 100%;
+        flex: 1;
 
-        .grid-icon {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 0;
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            margin-right: 4px;
-
-            span {
-                font-size: 16px;
-                color: #000;
-                line-height: 6px;
-                width: 6px;
-                height: 6px;
-                border-radius: 4px;
-            }
-        }
-
-        .grid-icon-text {
-            font-size: 15px;
-            font-family: Arial, sans-serif;
+        #mic,
+        #camera {
+            height: 100%;
+            /* padding: 0 20px; */
+            margin: 0 10px;
             display: flex;
-            align-items: center;
-            line-height: 20px;
+            position: relative;
 
-            .arrow {
-                width: 0;
-                height: 0;
-                border-right: 6px solid transparent;
-                border-left: 6px solid transparent;
-                border-top: 6px solid #000;
-                margin-left: 5px;
-            }
-        }
-
-        .grid-card {
-            position: absolute;
-            bottom: 40px;
-            left: -45px;
-            width: 180px;
-            max-width: 300px;
-            height: 40px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            display: none;
-
-            .grid-card-layout {
-                display: flex;
-                justify-content: space-between;
-
-                div {
+            .mic-icon-box,
+            .camera-icon-box {
+                .device-icon {
                     display: flex;
-                    justify-content: center;
                     align-items: center;
-                    width: 30px;
-                    height: 30px;
-                    padding: 4px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                    border-radius: 4px;
-                    outline: auto;
+                    flex-direction: column;
+                    border: none;
+                    background-color: white;
+                    cursor: pointer;
+                    padding: 3px 6px;
+                    border-radius: 3px;
 
                     img {
-                        width: 24px;
-                        height: 24px;
+                        width: 18px;
+                        height: 18px;
+                    }
+
+                    span {
+                        /* margin: 2px; */
+                        font-size: 12px;
+                        font-family: Arial, sans-serif;
                     }
                 }
 
-                div:hover {
-                    outline: gold 2px solid;
+                .device-icon:hover {
+                    background-color: rgb(204, 204, 204);
+                }
+            }
+
+            .arrow-background {
+                position: relative;
+                padding: 0 2px;
+                width: 8px;
+
+                .arrow {
+                    position: absolute;
+                    top: calc(50% - 3px);
+                    width: 6px;
+                    height: 6px;
+                    border-right: 1px solid black;
+                    border-bottom: 1px solid black;
+                    cursor: pointer;
+                    transform: rotate(-135deg);
+                    /* transition: transform 0.3s; */
+                    z-index: 10;
+                }
+            }
+
+            .arrow-background:hover {
+                background-color: rgb(172, 172, 172);
+            }
+
+            .device-select-card {
+                position: absolute;
+                display: none;
+                bottom: 40px;
+                padding: 10px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+                .device-select {
+                    display: flex;
+                    flex-direction: column;
+
+                    span {
+                        /* background-color: gray; */
+                        font-size: 12px;
+                        padding: 4px 0;
+                    }
+
+                    select {
+                        border: 1px solid #ccc;
+                        outline: none;
+                        padding: 10px 8px;
+                        margin-bottom: 8px;
+                        border-radius: 6px;
+                        background-color: #f0f0f0;
+                        font-size: 14px;
+                        cursor: pointer;
+
+                        /* 隐藏默认箭头 */
+                        /* appearance: none;    */
+                        option {
+                            height: 36px;
+                            cursor: pointer;
+                            padding: 20px;
+                        }
+                    }
                 }
 
+            }
+        }
 
+
+
+    }
+
+    .setting-middle {
+        display: flex;
+        justify-content: center;
+        flex: 6;
+
+        .middle-Icon-box {
+            position: relative;
+            margin: 0 10px;
+
+            .middle-Icon {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                cursor: pointer;
+                padding: 2px 8px;
+                border-radius: 3px;
+
+                .middle-icon-img {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .middle-icon-text {
+                    font-size: 12px;
+                }
+
+            }
+
+            .middle-icon-card {
+                position: absolute;
+                bottom: 40px;
+                left: -100%;
+                padding: 10px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                font-size: 12px;
+
+                .bandwidth-select {
+                    display: flex;
+                    flex-direction: column;
+
+                    span {
+                        font-size: 12px;
+                        padding: 4px 0;
+                    }
+
+                    select {
+                        border: 1px solid #ccc;
+                        outline: none;
+                        padding: 10px 8px;
+                        margin-bottom: 8px;
+                        border-radius: 6px;
+                        background-color: #f0f0f0;
+                        font-size: 14px;
+                        cursor: pointer;
+                    }
+                }
+
+            }
+
+            .middle-Icon:hover {
+                background-color: rgb(197, 196, 196);
             }
 
         }
 
     }
 
+    .setting-right {
+        flex: 1;
+        justify-content: flex-start;
+
+        .grid-icon-btn {
+            width: 110px;
+            display: flex;
+            align-items: center;
+            height: 20px;
+            margin: 6px 10px 6px 40px;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            flex: 1;
+
+            .grid-icon {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                gap: 0;
+                width: 20px;
+                height: 20px;
+                border-radius: 4px;
+                margin-right: 4px;
+
+                span {
+                    font-size: 16px;
+                    color: #000;
+                    line-height: 6px;
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 4px;
+                }
+            }
+
+            .grid-icon-text {
+                font-size: 15px;
+                font-family: Arial, sans-serif;
+                display: flex;
+                align-items: center;
+                line-height: 20px;
+
+                .arrow {
+                    width: 0;
+                    height: 0;
+                    border-right: 6px solid transparent;
+                    border-left: 6px solid transparent;
+                    border-top: 6px solid #000;
+                    margin-left: 5px;
+                }
+            }
+
+            .grid-card {
+                position: absolute;
+                bottom: 40px;
+                left: -45px;
+                width: 180px;
+                max-width: 300px;
+                height: 40px;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                display: none;
+
+                .grid-card-layout {
+                    display: flex;
+                    justify-content: space-between;
+
+                    div {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 30px;
+                        height: 30px;
+                        padding: 4px;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        border-radius: 4px;
+                        outline: auto;
+
+                        img {
+                            width: 24px;
+                            height: 24px;
+                        }
+                    }
+
+                    div:hover {
+                        outline: gold 2px solid;
+                    }
 
 
-    .grid-icon-btn:hover {
-        background-color: #e0e0e0;
+                }
+
+            }
+
+        }
+
+
+        .grid-icon-btn:hover {
+            background-color: #e0e0e0;
+        }
     }
 
-    .popup {
-        width: 120px;
-        height: 60px;
-        background-color: yellow;
+}
 
-        ul,
+.participantCard {
+    width: 115px;
+    background-color: whitesmoke;
+    text-align: center;
+
+    ul {
+        padding: 5px 4px;
+
         li {
-            img {
-                width: 48px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+
+            .nickname {
+                text-align: left;
+
+                span {
+                    color: blue;
+                    font-size: 14px;
+                    /* background-color: rgb(212, 210, 210); */
+                }
             }
+
+            .avatarIcon {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                /* background-color: aquamarine; */
+
+                img {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 24px;
+                }
+
+                .micIcon,
+                .videoIcon {
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+
+                .micIcon:hover,
+                .videoIcon:hover {
+                    transform: translateY(3px);
+                }
+            }
+
 
         }
     }
+
 }
 </style>
