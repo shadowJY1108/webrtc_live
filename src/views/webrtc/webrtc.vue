@@ -1,21 +1,93 @@
 <template>
     <div id="container">
 
-        <div class="rtc-container">
+        <div v-if="!showRoom" class="pre_container">
+
+            <div class="pre_main">
+                <div class="pre_localvideo">
+                    <video ref="localvideo" autoplay></video>
+                </div>
+
+                <div class="pre_device">
+                    <div class="device">
+                        <div id="mic">
+                            <div class="mic-icon-box">
+                                <button class="device-icon">
+                                    <img src="../../assets/icons/麦克风.svg" alt="Icon">
+                                </button>
+                            </div>
+
+                            <div class="arrow-background" @click="showAudioDevice">
+                                <div class="arrow"></div>
+                            </div>
+
+                            <div class="device-select-card" ref="audioDeviceCard">
+                                <div class="device-select">
+                                    <span>选择麦克风</span>
+                                    <select ref="audioSourceSelect" @change="changeAudioDevice"></select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="camera">
+                            <div class="camera-icon-box">
+                                <button class="device-icon">
+                                    <img src="../../assets/icons/摄像头.svg" alt="Icon">
+                                </button>
+                            </div>
+
+                            <div class="arrow-background" @click="showVideoDevice">
+                                <div class="arrow"></div>
+                            </div>
+
+                            <div class="device-select-card" ref="videoDeviceCard">
+                                <div class="device-select">
+                                    <span>选择摄像头</span>
+                                    <select ref="videoSourceSelect" @change="changeVideoDevice"></select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pre_info">
+                <div class="pre_info_page">
+                    <div class="pre_info_text">
+                        <span>加入连麦直播</span>
+                    </div>
+                    <form ref="form" @submit.prevent="joinRoom">
+                        <div class="input_confID">
+                            <label for="confId">请输入连麦房间Id:</label>
+                            <div class="confId">
+                                <input type="text" name="roomId" v-model="roomId" placeholder="roomId" required>
+                            </div>
+                        </div>
+                        <div class="join_conf">
+                            <button type="submit" class="">开启</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div v-if="showRoom" class="rtc-container">
             <div class="videoBox">
+
                 <div class="grid-container grid-1" v-if="currentLayout === 1">
                     <div class="one">
                         <div class="placeholder"></div>
                         <div class="video-container">
                             <video class="video1" ref="video1" autoplay></video>
-                            <div class="startBroadcast" ref="startBroadcast">
-                                <input type="button" value="开启连麦" @click="publish">
-                            </div>
                         </div>
-
                     </div>
-
                 </div>
+
                 <div class="grid-container grid-2" v-if="currentLayout === 2">
                     <div class="two">
                         <div class="video-container">
@@ -28,6 +100,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="grid-container grid-4" v-if="currentLayout === 4">
                     <div class="four">
                         <div class="video-container">
@@ -36,13 +109,12 @@
                                 <img src="../../assets/icons/麦克风静音.svg" alt="">
                                 <span>{{ site[1] }}</span>
                             </div>
-
                         </div>
                     </div>
                     <div class="four">
                         <div class="video-container">
                             <video ref="video2" class="video2" autoplay></video>
-                            <div class="siteName-right">
+                            <div class="siteName-left">
                                 <img src="../../assets/icons/麦克风静音.svg" alt="">
                                 <span>{{ site[2] }}</span>
                             </div>
@@ -59,9 +131,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="localvideo">
+
+                <!-- <div class="localvideo">
                     <video autoplay ref="localvideo"></video>
-                </div>
+                </div> -->
             </div>
 
             <div class="setting-box">
@@ -71,7 +144,7 @@
                         <div class="mic-icon-box">
                             <button class="device-icon">
                                 <img src="../../assets/icons/麦克风.svg" alt="Icon">
-                                <span>静音</span>
+                                <!-- <span>静音</span> -->
                             </button>
                         </div>
 
@@ -92,7 +165,7 @@
                         <div class="camera-icon-box">
                             <button class="device-icon">
                                 <img src="../../assets/icons/摄像头.svg" alt="Icon">
-                                <span>摄像机</span>
+                                <!-- <span>摄像机</span> -->
                             </button>
                         </div>
 
@@ -105,7 +178,6 @@
                                 <span>选择摄像头</span>
                                 <select ref="videoSourceSelect" @change="changeVideoDevice"></select>
                             </div>
-
                         </div>
                     </div>
 
@@ -186,21 +258,21 @@
             </div>
         </div>
 
-        <div v-if="showParticipant" class="participantCard" >
+        <div v-if="showParticipant" class="participantCard">
             <ul>
                 <li v-for="(user, index) in userList" :key="index">
                     <div class="nickname">
-                        <span> {{ user.nickname }}</span>
+                        <span> {{ user.userId }}</span>
 
                     </div>
                     <div class="avatarIcon">
                         <div>
                             <img :src="user.avatar" alt="">
                         </div>
-                        <div class="micIcon" @click="swtichRemoteMic(user.nickname)">
+                        <div class="micIcon" @click="swtichRemoteMic(user.userId)">
                             <img src="../../assets/icons/麦克风静音.svg" alt="">
                         </div>
-                        <div class="videoIcon" @click="swtichRemoteCamera(user.nickname)">
+                        <div class="videoIcon" @click="swtichRemoteCamera(user.userId)">
                             <img src="../../assets/icons/开播gray.svg" alt="">
                         </div>
                     </div>
@@ -209,9 +281,7 @@
             </ul>
         </div>
 
-        <div class="background">
-
-        </div>
+        <div class="background"></div>
 
     </div>
 </template>
@@ -224,7 +294,8 @@ export default {
     name: 'join webrtc',
     data() {
         return {
-            socket: io('https://101.43.35.208:7001'),
+            // socket: io('https://101.43.35.208:7001'),
+            socket: null,
 
             pc: null,   //推流pc
             pcs: {},    //播放拉流pcs
@@ -239,11 +310,12 @@ export default {
                 avatar: this.$store.getters.userInfo.avatar,
             },  //自己
             userList: [],   //房间所有人，存放user
-            roomId: 1234,   //指定的房间Id
+            roomId: '',   //指定的房间Id
 
             site: {},
             showBandWidth: false,
             showParticipant: false,
+            showRoom: false,
 
             currentLayout: 1,  //默认布局为1
             currentStreams: {},
@@ -251,84 +323,6 @@ export default {
     },
 
     mounted() {
-        this.socket.on('connect', () => {
-            console.log('Socket connected:', this.user.nickname);
-            // 页面加载直接发一条加入房间的消息
-        });
-
-        // 监听加入连麦的主播
-        this.socket.on('published', data => {
-            console.log(data.nickname + '加入了连麦：' + data.videoTag);
-            // this.state = 'joined'
-            // console.log('update: state=', this.state);
-            this.userList = data.userList
-            console.log('房间列表：', this.userList);
-            this.updateLayout();
-
-            // 播放
-            for (let user of this.userList) {
-                this.play(user.nickname);
-            }
-        })
-
-        // 监听到其他人加入otherJoin
-        this.socket.on('otherPublished', data => {
-            // play
-            console.log('other published:', data.nickname, data.videoTag);
-            this.userList = data.userList
-            this.updateLayout();
-            this.play(data.nickname)
-        })
-
-        // 离开房间
-        this.socket.on('leaveRoom', data => {
-            console.log('离开房间：', data.nickname);
-            this.userList = this.userList.filter(value => {
-                return value !== data.nickname;
-            });
-            this.pcs[data.nickname].close()
-            this.pcs[data.nickname] = null
-            console.log(' this.pcs:', this.pcs);
-        })
-
-        // 监听answerSDP 推流的sdp,  注意不是play的SDP
-        this.socket.on('answerSDP', async data => {
-            console.log('receive publish answerSDP', data);
-
-            await this.pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: data.sdp }));
-            const startBroadcast = this.$refs.startBroadcast
-            startBroadcast.style.display = 'none'
-            // 当推流成功保存当前peer中的track
-            this.currentVideoTrack = this.localStream.getVideoTracks()[0];
-            this.currentAudioTrack = this.localStream.getAudioTracks()[0];
-        })
-
-        // 监听playAnswerSDP  播放的sdp
-        this.socket.on('playAnswerSDP', async data => {
-            const { nickname, sdp, videoTag } = data;
-            this.site[videoTag] = nickname
-            console.log('this.site', this.site);
-
-            const stream = new MediaStream()
-            const video = this.$refs[`video${videoTag}`]
-            console.log('receive playAnswerSDP:', data);
-
-            try {
-                // if (!this.pcs[nickname]) {
-                //   console.log('不存在');
-                // }     
-                this.pcs[nickname].ontrack = e => {
-                    console.log('play track event:', e)
-                    stream.addTrack(e.track)
-                    video.srcObject = stream
-                }
-                await this.pcs[nickname].setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: sdp }));
-                console.log(`set remoteDesc for play ${nickname}`);
-            } catch (err) {
-                console.error('Error setting remote description or handling track event:', err);
-            }
-        })
-
         // 页面加载获取
         navigator.mediaDevices.enumerateDevices()
             .then(this.gotDevices)
@@ -338,7 +332,112 @@ export default {
             })
 
     },
+
     methods: {
+        // 0.加入房间
+        joinRoom() {
+            this.socket = io('https://101.43.35.208:7001')
+            // 设置连接成功后的事件监听器
+            this.socket.on('connect', async () => {
+                const data = {
+                    user: this.user,
+                    roomId: this.roomId,
+                };
+                console.log('Socket connected:', this.user.nickname);
+                this.socket.emit('joinRtcRoom', data);
+                this.socketListeners();
+                this.showRoom = !this.showRoom
+                navigator.mediaDevices.enumerateDevices()
+                    .then(this.gotDevices)
+                    .catch(err => {
+                        console.error('获取设备出错：', err);
+                    })
+            })
+        },
+
+        socketListeners() {
+            this.socket.on('joined', data => {
+                console.log(data);
+                console.log(`receive ${data[0].userId} Joined room ${this.roomId}`);
+                this.userList = data
+                console.log(this.userList);
+                this.publish()
+            })
+
+            // 监听到自己加入房间，遍历播放所有人
+            this.socket.on('published', data => {
+                console.log(`${data.userId} published`);
+                this.updateLayout();
+                for (const user of this.userList) {
+                    console.log(user);
+                    this.play(user.userId)
+                }
+            })
+
+            // 监听到其他人加入otherJoin，播放other
+            this.socket.on('otherPublished', data => {
+                // play
+                console.log('other published:', data);
+                this.userList.push(data)
+                this.updateLayout();
+                this.play(data.userId)
+            })
+
+            // 离开房间
+            this.socket.on('leaveRoom', data => {
+                console.log('离开房间：', data.userId);
+                this.userList = this.userList.filter(value => {
+                    return value !== data.nickname;
+                });
+                this.pcs[data.userId].close()
+                this.pcs[data.userId] = null
+                console.log('leave room -> this.pcs:', this.pcs);
+            })
+
+            this.socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                this.pc.close()
+                this.pc = null
+            });
+
+            // 监听answerSDP 推流的sdp,  注意不是play的SDP
+            this.socket.on('answerSDP', async data => {
+                console.log('receive publish answerSDP', data);
+                await this.pc.setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: data.sdp }));
+                // const startBroadcast = this.$refs.startBroadcast
+                // startBroadcast.style.display = 'none'
+                // 当推流成功保存当前peer中的track
+                this.currentVideoTrack = this.localStream.getVideoTracks()[0];
+                this.currentAudioTrack = this.localStream.getAudioTracks()[0];
+            })
+
+            // 监听playAnswerSDP  播放的sdp
+            this.socket.on('playAnswerSDP', async data => {
+                const { userId, sdp, videoTag } = data;
+                this.site[videoTag] = userId
+                console.log('this.site', this.site);
+
+                const stream = new MediaStream()
+                const video = this.$refs[`video${videoTag}`]
+                console.log('receive playAnswerSDP:', data);
+
+                try {
+                    // if (!this.pcs[nickname]) {
+                    //   console.log('不存在');
+                    // }     
+                    this.pcs[userId].ontrack = e => {
+                        console.log('play track event:', e)
+                        stream.addTrack(e.track)
+                        video.srcObject = stream
+                    }
+                    await this.pcs[userId].setRemoteDescription(new RTCSessionDescription({ type: 'answer', sdp: sdp }));
+                    console.log(`set remoteDesc for play ${userId}`);
+                } catch (err) {
+                    console.error('Error setting remote description or handling track event:', err);
+                }
+            })
+        },
+
         // 1.本地流
         async getLocalStream() {
             const videoSourceSelect = this.$refs.videoSourceSelect;
@@ -386,6 +485,7 @@ export default {
             });
         },
 
+
         // 2.本地流设备切换
         updateLocalStreamWithNewTrack(type, newTrack) {
             const tracks = type === 'video' ? this.localStream.getVideoTracks() : this.localStream.getAudioTracks();
@@ -397,7 +497,6 @@ export default {
                 console.log('No peerconnection found2');
                 return;
             }
-
         },
 
         async publish() {
@@ -405,10 +504,8 @@ export default {
                 console.log("已开始推流");
                 return;
             }
-
             try {
                 // 1.获取本地流
-
                 // 2.创建 PeerConnection
                 // 注意添加顺序为audio、video,后续RTCPeerConnection创建offer时SDP的m线顺序遵循此顺序创建，SRS自带的信令服务器响应的SDP中m线总是先audio后video。
                 // 若本端SDP和远端SDP中的m线顺序不一直，则设置远端描述时会异常，显示offer中的m线与answer中的m线顺序不匹配
@@ -420,9 +517,6 @@ export default {
 
                 // 3.将本地流的 track 添加到 PeerConnection
                 this.localStream.getTracks().forEach(track => {
-                    // if (track.kind === 'video') {
-                    //     this.pc.addTransceiver("video", { direction: "recvonly" })
-                    // }
                     this.pc.addTrack(track, this.localStream);
                 });
 
@@ -434,8 +528,7 @@ export default {
                 await this.pc.setLocalDescription(offer);
 
                 const data = {
-                    user: this.user,
-                    roomId: this.roomId,
+                    userId: this.user.nickname,
                     sdp: offer.sdp
                 };
 
@@ -449,8 +542,6 @@ export default {
             } catch (err) {
                 console.error('Error publishing stream:', err);
             }
-
-
         },
 
         // 4. 拉流
@@ -468,7 +559,7 @@ export default {
                 console.log('set localDesc for play:', offer);
 
                 const data = {
-                    'nickname': us,
+                    'userId': us,
                     'roomId': this.roomId,
                     'sdp': offer.sdp
                 };
@@ -486,8 +577,8 @@ export default {
         swtichRemoteMic(remoteId) {
             this.pcs[remoteId].getReceivers().forEach(receiver => {
                 if (receiver.track.kind === 'audio') {
-                    receiver.track.enabled =  !receiver.track.enabled
-                } 
+                    receiver.track.enabled = !receiver.track.enabled
+                }
             });
         },
 
@@ -495,7 +586,7 @@ export default {
             this.pcs[remoteId].getReceivers().forEach(receiver => {
                 if (receiver.track.kind === 'video') {
                     receiver.track.enabled = !receiver.track.enabled
-                } 
+                }
             });
         },
 
@@ -527,7 +618,7 @@ export default {
 
         // 5.2 自动分屏
         updateLayout() {
-            const userCount = this.userList.length;
+            const userCount = Object.keys(this.userList).length;
             let layout;
             if (userCount === 1) {
                 layout = 1;
@@ -630,8 +721,8 @@ export default {
             const videoSource = videoSourceSelect.value;
             const newConstraints = {
                 video: {
-                    width: { min: 320, ideal: 384 },
-                    height: { min: 180, ideal: 240 },
+                    width: { min: 320, ideal: 800 },
+                    height: { min: 180, ideal: 450 },
                     deviceId: videoSource ? { exact: videoSource } : undefined,
                     aspectRatio: 16 / 9
                 },
@@ -739,36 +830,159 @@ export default {
 <style scoped>
 #container {
     width: 100%;
-    /* height: calc(100% - 5px); */
     height: 100%;
     display: flex;
     position: relative;
-
+    justify-content: center;
+    align-items: center;
 }
 
 .background {
     background-image: url('../../assets/background.webp');
     width: 100%;
-    height: calc(100% + 60px);
+    height: 100%;
     position: absolute;
     background-size: cover;
-    top: -60px;
     z-index: -20;
+}
 
+.pre_container {
+    height: 450px;
+    display: flex;
+    justify-content: center;
+
+    .pre_main {
+        position: relative;
+        width: 800px;
+        height: 450px;
+        background-color: #dee0e3;
+        border-radius: 8px;
+        outline: gold;
+
+
+        .pre_localvideo {
+            width: 100%;
+            height: 100%;
+
+            video {
+                width: 100%;
+                height: 100%;
+                border-radius: 8px;
+            }
+        }
+
+        .pre_device {
+            position: absolute;
+            width: 200px;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    }
+
+    .pre_info {
+        width: 320px;
+        height: 450px;
+        background-color: white;
+        box-shadow: 0 10px 60px 10px rgba(31, 35, 41, .1);
+        border-radius: 8px;
+        margin-left: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .pre_info_page {
+            width: 210px;
+            height: 264px;
+            display: flex;
+            flex-direction: column;
+
+
+            .pre_info_text {
+                flex: 1;
+                /* background-color: pink; */
+                font-size: 22px;
+                font-weight: 700;
+            }
+
+            form {
+                flex: 2;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+
+                .input_confID {
+                    width: 100%;
+                    height: 70px;
+                    border-radius: 8px;
+
+                    label {
+                        font-size: 12px;
+                        color: rgb(31, 35, 41)
+                    }
+
+                    .confId {
+                        width: 100%;
+                        height: 40px;
+                        margin-top: 8px;
+                        padding: 2px 6px;
+                        display: flex;
+                        box-sizing: border-box;
+                        outline: none;
+                        border: 1px solid rgb(208, 211, 214);
+                        border-radius: 6px;
+
+                        input {
+                            /* flex: 1; */
+                            border: 0;
+                            color: rgb(31, 35, 41);
+                            width: 100%;
+                            height: 36px;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            padding: 0;
+                            outline: none;
+                            user-select: auto;
+                            background: transparent;
+                        }
+                    }
+
+                }
+
+                .join_conf {
+                    width: 100%;
+                    text-align: center;
+                    margin-top: 20px;
+
+                    button {
+                        width: 100%;
+                        height: 40px;
+                        border-radius: 6px;
+                        background-color: rgb(53, 189, 75);
+                        color: white;
+                        font-size: 16px;
+                        font-weight: 500;
+                    }
+                }
+
+            }
+        }
+
+    }
 }
 
 .rtc-container {
     display: flex;
     flex-direction: column;
-    /* width: 100%; */
-    flex-grow: 1;
+    width: 100%;
     height: 100%;
 }
 
 .videoBox {
-    /* outline: auto; */
     width: 100%;
-    height: 100%;
+    height: calc(100% - 40px);
     position: relative;
 
     .localvideo {
@@ -794,27 +1008,25 @@ export default {
     .grid-1,
     .grid-2,
     .grid-4 {
-        /* width: 100%; */
+        width: 100%;
         height: 100%;
-    }
-
-    .grid-1 {
         display: flex;
         justify-content: center;
         align-items: center;
+    }
 
-        .one {
-            width: 55%;
-            outline: auto;
+    .grid-1 .one {
+        width: 55%;
+        outline: auto;
+        position: relative;
+        background-color: rgb(241 243 244);
+        border-radius: 6px;
+
+        .video-container {
+            padding-bottom: 56.25%;
+            height: 0;
             position: relative;
-            background-color: rgb(241 243 244);
-
-            .video-container {
-                padding-bottom: 56.25%;
-                height: 0;
-                position: relative;
-                border-radius: 8px;
-            }
+            border-radius: 6px;
 
             video {
                 position: absolute;
@@ -823,94 +1035,53 @@ export default {
                 width: 100%;
                 height: 100%;
                 display: block;
-                border-radius: 2px;
+                border-radius: 6px;
                 object-fit: cover;
             }
-
-            .startBroadcast {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: #4CAF50;
-                border-radius: 5px;
-            }
-
-            .startBroadcast input[type="button"] {
-                border: none;
-                color: blue;
-                font-weight: 700;
-                padding: 40px 80px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 20px;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-
-            .startBroadcast input[type="button"]:hover {
-                opacity: 0.7;
-                background-color: #45a049;
-            }
-
-            .placeholder {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                border-radius: 8px;
-                background-color: #ddd;
-                box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-                z-index: -1;
-            }
-
-
         }
 
-
+        .placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 6px;
+            background-color: #ddd;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
     }
 
-    .grid-2 {
+    .grid-2 .two {
+        position: relative;
+        border-radius: 8px;
         display: flex;
-        justify-content: center;
-        /* align-items: center; */
+        align-items: center;
 
-        .two {
-            position: relative;
-            border-radius: 8px;
-            /* background-color: white; */
-            display: flex;
-            align-items: center;
+        .video-container {
+            width: 900px;
+            height: 506px;
+            outline: gold 2px solid;
+            border-radius: 6px;
 
-            .video-container {
-                width: 900px;
-                height: 506px;
-                outline: gold 2px solid;
+            video {
+                width: calc(100% - 4px);
+                display: block;
                 border-radius: 6px;
-
-                video {
-                    width: calc(100% - 4px);
-                    display: block;
-                    border-radius: 6px;
-                    object-fit: cover;
-                }
+                object-fit: cover;
             }
-
-
         }
     }
+
 
     .grid-4 {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-template-columns: auto auto;
+        align-content: center;
 
         .four {
-            display: flex;
             position: relative;
             outline: gold 2px solid;
             border-radius: 6px;
@@ -923,40 +1094,16 @@ export default {
                 .siteName-left {
                     display: flex;
                     align-items: center;
-                    height: 22px;
-                    padding: 2px;
-                    /* background-color: rgb(185, 185, 185); */
-                    background-color: white;
-                    border-radius: 6px;
                     position: absolute;
-                    bottom: 4px;
+                    bottom: 5px;
                     left: 10px;
-                    font-size: 12px;
-                    color: black;
-                    text-align: center;
-                    line-height: 22px;
-
-                    img {
-                        width: 14px;
-                        margin: 0 3px;
-                    }
-                }
-
-                .siteName-right {
-                    display: flex;
-                    align-items: center;
                     height: 22px;
-                    padding: 2px;
-                    /* background-color: rgb(185, 185, 185); */
-                    background-color: white;
-                    border-radius: 6px;
-                    position: absolute;
-                    bottom: 4px;
-                    right: 10px;
-                    font-size: 12px;
-                    color: black;
-                    text-align: center;
                     line-height: 22px;
+                    padding: 2px;
+                    background-color: rgb(237, 237, 237);
+                    border-radius: 6px;
+                    font-size: 12px;
+                    text-align: center;
 
                     img {
                         width: 14px;
@@ -965,29 +1112,13 @@ export default {
                 }
 
                 .video1,
-                .video3 {
-                    position: absolute;
-                    /* background-color: blue; */
-                    top: 0;
-                    right: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 8px;
-                    /* outline: gold 2px solid; */
-                }
-
+                .video3,
                 .video2,
                 .video4 {
-                    position: absolute;
-                    /* background-color: pink; */
-                    top: 0;
-                    left: 0;
-                    height: 100%;
                     width: 100%;
+                    height: 100%;
                     object-fit: cover;
                     border-radius: 8px;
-                    /* outline: gold 2px solid; */
                 }
             }
 
@@ -1001,119 +1132,9 @@ export default {
 .setting-box {
     display: flex;
     height: 40px;
-    background-color: white;
+    background-color: pink;
     justify-content: center;
 
-    .device {
-        display: flex;
-        height: 100%;
-        flex: 1;
-
-        #mic,
-        #camera {
-            height: 100%;
-            /* padding: 0 20px; */
-            margin: 0 10px;
-            display: flex;
-            position: relative;
-
-            .mic-icon-box,
-            .camera-icon-box {
-                .device-icon {
-                    display: flex;
-                    align-items: center;
-                    flex-direction: column;
-                    border: none;
-                    background-color: white;
-                    cursor: pointer;
-                    padding: 3px 6px;
-                    border-radius: 3px;
-
-                    img {
-                        width: 18px;
-                        height: 18px;
-                    }
-
-                    span {
-                        /* margin: 2px; */
-                        font-size: 12px;
-                        font-family: Arial, sans-serif;
-                    }
-                }
-
-                .device-icon:hover {
-                    background-color: rgb(204, 204, 204);
-                }
-            }
-
-            .arrow-background {
-                position: relative;
-                padding: 0 2px;
-                width: 8px;
-
-                .arrow {
-                    position: absolute;
-                    top: calc(50% - 3px);
-                    width: 6px;
-                    height: 6px;
-                    border-right: 1px solid black;
-                    border-bottom: 1px solid black;
-                    cursor: pointer;
-                    transform: rotate(-135deg);
-                    /* transition: transform 0.3s; */
-                    z-index: 10;
-                }
-            }
-
-            .arrow-background:hover {
-                background-color: rgb(172, 172, 172);
-            }
-
-            .device-select-card {
-                position: absolute;
-                display: none;
-                bottom: 40px;
-                padding: 10px;
-                background-color: #fff;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-                .device-select {
-                    display: flex;
-                    flex-direction: column;
-
-                    span {
-                        /* background-color: gray; */
-                        font-size: 12px;
-                        padding: 4px 0;
-                    }
-
-                    select {
-                        border: 1px solid #ccc;
-                        outline: none;
-                        padding: 10px 8px;
-                        margin-bottom: 8px;
-                        border-radius: 6px;
-                        background-color: #f0f0f0;
-                        font-size: 14px;
-                        cursor: pointer;
-
-                        /* 隐藏默认箭头 */
-                        /* appearance: none;    */
-                        option {
-                            height: 36px;
-                            cursor: pointer;
-                            padding: 20px;
-                        }
-                    }
-                }
-
-            }
-        }
-
-
-
-    }
 
     .setting-middle {
         display: flex;
@@ -1290,6 +1311,115 @@ export default {
     }
 
 }
+
+.device {
+    display: flex;
+    /* height: 100%; */
+
+    #mic,
+    #camera {
+        margin: 3px 10px;
+        display: flex;
+        position: relative;
+
+        .mic-icon-box,
+        .camera-icon-box {
+            .device-icon {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                border: none;
+                background-color: white;
+                cursor: pointer;
+                padding: 4px 10px;
+                box-sizing: border-box;
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+
+                img {
+                    width: 26x;
+                    height: 26px;
+                }
+
+            }
+
+        }
+
+        .arrow-background {
+            position: relative;
+            padding: 0 2px;
+            width: 20px;
+            height: 34px;
+            background-color: white;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+
+            .arrow {
+                position: absolute;
+                top: calc(50% - 2px);
+                width: 8px;
+                height: 8px;
+                border-right: 1px solid black;
+                border-bottom: 1px solid black;
+                cursor: pointer;
+                transform: rotate(-135deg);
+                z-index: 10;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+        }
+
+        .arrow-background:hover {
+            background-color: rgb(172, 172, 172);
+        }
+
+        .device-select-card {
+            position: absolute;
+            display: none;
+            bottom: 40px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+            .device-select {
+                display: flex;
+                flex-direction: column;
+
+                span {
+                    /* background-color: gray; */
+                    font-size: 12px;
+                    padding: 4px 0;
+                }
+
+                select {
+                    border: 1px solid #ccc;
+                    outline: none;
+                    padding: 10px 8px;
+                    margin-bottom: 8px;
+                    border-radius: 6px;
+                    background-color: #f0f0f0;
+                    font-size: 14px;
+                    cursor: pointer;
+
+                    /* 隐藏默认箭头 */
+                    /* appearance: none;    */
+                    option {
+                        height: 36px;
+                        cursor: pointer;
+                        padding: 20px;
+                    }
+                }
+            }
+
+        }
+    }
+
+
+
+}
+
 
 .participantCard {
     width: 115px;

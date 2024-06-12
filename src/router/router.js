@@ -112,10 +112,14 @@ const routes = [
                 }
 
             },
-            {
-                path: 'join',component: join
-            }
         ],
+    },
+    {
+        path: '/join',
+        component: join,
+        children: [
+            { path: 'join', component: join },
+        ]
     },
     {
         path: '/login',
